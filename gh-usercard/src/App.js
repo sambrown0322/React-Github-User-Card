@@ -10,6 +10,7 @@ class App extends React.Component {
     this.state = {
       users: [],
       followers: [],
+      searchText: "",
     };
   }
   componentDidMount() {
@@ -36,11 +37,48 @@ class App extends React.Component {
         console.log(err);
       });
   }
+  handleChanges = (e) => {
+    const { value } = e.target;
+    this.setState({
+      searchText: value,
+    });
+  };
+  fetchHandle = (e) => {
+    e.preventDefault();
+    axios
+      .get(`https://api.github.com/users/${this.state.searchText}`)
+      .then((res) => {
+        this.setState({
+          users: res.data,
+        });
+      });
+    axios
+      .get(`https://api.github.com/users/${this.state.searchText}/followers`)
+      .then((res) => {
+        console.log(res);
+        this.setState({
+          followers: res.data,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   render() {
     return (
       <div className="App">
         <Card users={this.state.users} />
         <Followers followers={this.state.followers} />
+        <label>
+          {" "}
+          Type in a Github handle:{" "}
+          <input
+            type="text"
+            value={this.state.searchText}
+            onChange={this.handleChanges}
+          />
+          <button onClick={this.fetchHandle}>Search</button>
+        </label>
       </div>
     );
   }

@@ -13,10 +13,6 @@ const CardStyle = styled.div`
 `;
 
 class Card extends React.Component {
-  constructor() {
-    super();
-  }
-
   render() {
     return (
       <CardStyle>
